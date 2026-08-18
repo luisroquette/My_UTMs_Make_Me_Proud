@@ -2,6 +2,10 @@
   <img src="assets/cover.png" alt="My_UTMs_Make_Me_Proud — every marketing link, tracked" width="100%">
 </p>
 
+<p align="center">
+  <img src="assets/logo.png" alt="CF Gauss" width="72">
+</p>
+
 <h1 align="center">My_UTMs_Make_Me_Proud</h1>
 
 <p align="center">

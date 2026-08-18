@@ -48,6 +48,7 @@
 - [Casos de uso](#casos-de-uso)
 - [Exemplo de saída](#exemplo-de-saída)
 - [Arquitetura](#arquitetura)
+- [Dashboard de referência](#dashboard-de-referência)
 - [Metodologia](#metodologia)
 - [Novidades na versão 1.0.0](#novidades-na-versão-100)
 - [Limitações](#limitações)
@@ -451,6 +452,10 @@ integracoes/
   modelo-nova-integracao.md   template for the next channels
 scripts/
   validar-tracking-link.py    deterministic form validator + 13 regression cases
+  gerar-dashboard.py          deterministic dashboard generator + 8 regression cases
+dashboard/
+  dados-exemplo.json          canonical storage-layer export shape
+  index.html                  generated reference dashboard (opens offline)
 examples/
   example-tracking-link.json  canonical valid link
 agents/
@@ -464,6 +469,21 @@ Three principles hold the architecture together:
 **The nucleus is channel-agnostic.** Nothing in `nucleo/` mentions a specific product, a specific host, or a specific channel. The moment a rule starts mentioning "the campaign", it belongs in an integration, not in the nucleus.
 
 **Analytics never blocks delivery.** In every stage — creation, click, health — the failure mode is degrade-and-log, never block. A tracking system that takes the store down with it has failed its one job.
+
+---
+
+## Dashboard de referência
+
+The metrics contract's dashboard consumer, shipped as a deterministic generator — same philosophy as the validator: stdlib only, no server, zero JavaScript.
+
+```bash
+# regenerate the committed reference dashboard
+python3 scripts/gerar-dashboard.py --input dashboard/dados-exemplo.json --output dashboard/index.html
+# regression suite (8 cases)
+python3 scripts/gerar-dashboard.py --self-test
+```
+
+`dashboard/index.html` opens offline and answers the five contract questions: clicks per link per period (7/30/90 columns), clicks per origin (UTM snapshots — editing a link never rewrites history), conversions per link, derived link status (paused > expired > broken > active), and the calendar-filled 30-day series where a gap renders as `—` and a measured zero as `0`. The input is the storage-layer export (`dashboard/dados-exemplo.json` shows the canonical shape); the attribution join happens at export time. Design: `docs/superpowers/specs/2026-08-18-dashboard-skill-design.md`.
 
 ---
 

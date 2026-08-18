@@ -12,7 +12,7 @@ Which system creates tracking links and under what lifecycle (e.g. one link per 
 
 ### 2. Slug and UTM conventions
 
-- Slug convention for this channel (prefix or pattern), if any — e.g. the reference email convention is `mailmkt-`-prefixed, idempotent per campaign: `obterOuCriarTrackingLinkMailMkt`.
+- Slug convention for this channel (prefix or pattern), if any — the reference email convention (see `mailmkt.md`) is `mailmkt-`-prefixed, idempotent per campaign, created once per campaign run.
 - Default `utm_source` / `utm_medium` for the channel (or the inference rule when the creator does not state them).
 
 ### 3. Destination rules specific to the channel

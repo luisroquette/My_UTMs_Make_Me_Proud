@@ -17,6 +17,12 @@
   <img alt="13 regression cases" src="https://img.shields.io/badge/regression_cases-13-681D2A.svg">
 </p>
 
+
+<p align="center">
+  <video src="assets/demo.mp4" autoplay muted loop playsinline width="640"></video><br>
+  <sub>The cycle, animated — a link through the 302 gate into three tracked channels</sub>
+</p>
+
 > **Independent project:** My_UTMs_Make_Me_Proud is not affiliated with, endorsed by, or sponsored by any analytics vendor. It implements established marketing-attribution patterns with deterministic tooling — no third-party copy, no trademarks, no claims about tools it does not ship.
 
 ---

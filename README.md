@@ -447,6 +447,7 @@ nucleo/            the cycle — creation, click, attribution, health, metrics
   metricas.md      7/30/90 calendar-filled windows
 integracoes/
   lp.md            the landing-page channel (first integration)
+  mailmkt.md       the email marketing channel (second integration)
   modelo-nova-integracao.md   template for the next channels
 scripts/
   validar-tracking-link.py    deterministic form validator + 13 regression cases
@@ -491,6 +492,13 @@ The repository was born complete — v1.0.0 shipped the full cycle with a tag an
 - **The deterministic validator** with its initial regression suite, extended during the hardening pass to 13 cases.
 - **The fidelity contract**, verified against production traffic: the `/t/` → 302 behavior, the camelCase/snake_case attribution pair, and the documented absence of rename propagation.
 
+## Novidades na versão 1.1.0
+
+The second integration landed: the email marketing contract.
+
+- **`references/integracoes/mailmkt.md`** — extracted from the CF Gauss production binding (18/08/2026): one idempotent `mailmkt-<slug>` link per campaign run, `mailmkt_` UTM prefix, double tracking (`/t/` + per-recipient nurture events), the send-time raw-URL gate, coupon-token expiry, and the documented absence of per-recipient links.
+- The integration template now points at `mailmkt.md` as the reference email example.
+
 Changelog: [CHANGELOG.md](./CHANGELOG.md) · Releases: [GitHub Releases](https://github.com/luisroquette/My_UTMs_Make_Me_Proud/releases)
 
 ---
@@ -531,7 +539,7 @@ Nothing is installed outside the skill directory. No services, no hooks, no glob
 The skill is the tracking layer of a larger system. The extensions that consume it:
 
 - **My_LP_Makes_Neil_Proud** — the landing-page engine. Its plug (v2.1.0) references this repository: every LP CTA ships as a tracking link created under this contract, and the lead records `firstTrackingClickId`/`lastTrackingClickId`.
-- **My_MailMKT_makes_Neil_Proud** — the email engine. Every marketing CTA ships as a `mailmkt-<slug>` tracking link; body links get per-destination slugs.
+- **My_MailMKT_makes_Neil_Proud** — the email engine. Every marketing CTA ships as a `mailmkt-<slug>` tracking link; body links get per-destination slugs. The binding is documented in [`references/integracoes/mailmkt.md`](./references/integracoes/mailmkt.md).
 - **Next planned integrations** — workshops, paid ads, WhatsApp — each following `modelo-nova-integracao.md`.
 
 ---

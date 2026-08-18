@@ -18,7 +18,7 @@ The click path is the only public surface of the system: a short route (`/t/<slu
 
 1. **Validate** the slug against the slug regex. Invalid → 404.
 2. **Resolve** the destination: active, not deleted, not expired. Resolve first, via the service-role resolver, with a direct-table fallback that re-checks expiry. If resolution fails → 404; if the whole mechanism is down → 503 "Tracking unavailable".
-3. **Record** the click: insert the granular event (idempotent on `click_id` — a replay never double-counts) and increment the daily aggregate.
+3. **Record** the click: insert the granular event (idempotent on `click_id`) and increment the daily aggregate **only when the insert actually created the row** (upsert returning `inserted`/`updated` — or an idempotent aggregate upsert keyed on `click_id`). A replay must never re-increment: the granular event and the aggregate are one atomic unit, "both layers or neither".
 4. **Redirect** 302 to `tracked_destination_url`.
 
 **Metrics never block the visitor.** If recording fails, log it and redirect anyway. The redirect is the product; the metric is the side effect. This rule is absolute: no metric error may ever stand between a visitor and the destination.

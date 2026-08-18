@@ -28,8 +28,10 @@ The portable contract is the reference table shape. Field names here are the can
 
 ## Slug rules
 
-- Normalize automatically: strip accents, lowercase, non-alphanumerics become hyphens, collapse repeated hyphens, slice to 80.
-- When the derived slug exceeds 80 chars, append a short deterministic hash (FNV-1a) instead of silently truncating — truncation creates collisions between similar names.
+- Normalize automatically: strip accents, lowercase, non-alphanumerics become hyphens, collapse repeated hyphens.
+- When the normalized slug exceeds 80 chars, truncate it to `80 - len(hash)` and append a short deterministic hash (FNV-1a) — never truncate without the hash, plain truncation creates collisions between similar names. The final slug must stay within 1-80 chars.
+- The hostname → utm_source inference map lives **per integration** (`integracoes/<canal>/`), not in the nucleus — each channel owns its mapping.
+- Destination URLs must be **query-free**: the tracked URL is `destination_url + "?" + utm params`, so a destination that already carries a query string can never validate. Reject query strings on creation.
 - The slug is the public identity (`/t/<slug>`). Renaming a slug changes a public URL: treat it as a destructive edit.
 
 ## UTM rules

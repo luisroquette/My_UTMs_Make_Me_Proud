@@ -33,7 +33,7 @@ Integrations are pluggable contracts in `references/integracoes/`. Each defines 
 Load `references/nucleo/criacao.md`.
 
 **Output contract:**
-- A link draft with slug, destination, tracked destination (destination + UTMs), and lifecycle fields — valid under `python3 scripts/validar-tracking-link.py --input <draft>.json`.
+- A link draft with slug, destination, tracked destination (destination + UTMs), and lifecycle fields — valid under `python3 scripts/validar-tracking-link.py  # rode da RAIZ da skill --input <draft>.json`.
 - The three creation modes applied when applicable: individual, bulk (up to 25), all pages of a campaign (up to 250, atomic batch).
 - Optimistic concurrency and audit-trail requirements stated.
 - The draft is delivered for human review. **Creation never activates a link on its own.**

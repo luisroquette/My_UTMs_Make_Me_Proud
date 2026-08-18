@@ -10,7 +10,7 @@ import argparse
 import json
 import re
 import sys
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 SLUG_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 NAME_MAX = 100
@@ -37,9 +37,12 @@ def erros_link(link):
         erros.append("destination_url: must start with http(s):// and be <=2048 chars")
     else:
         parsed = urlparse(dest)
+        if not parsed.hostname:
+            erros.append("destination_url: must have a hostname")
         if parsed.username or parsed.password:
             erros.append("destination_url: credentials embedded in URL")
-        if parsed.path.startswith("/t/"):
+        # case-insensitive: /T/ is the same loop
+        if parsed.path.lower().startswith("/t/"):
             erros.append("destination_url: must not point to another tracking link (/t/ loop)")
 
     tracked = link.get("tracked_destination_url")
@@ -50,9 +53,10 @@ def erros_link(link):
             erros.append("tracked_destination_url: must be destination_url + query string")
         else:
             qs = tracked[len(dest) + 1:]
+            valores = parse_qs(qs, keep_blank_values=True)
             for chave in ("utm_source", "utm_medium", "utm_campaign"):
-                if chave + "=" not in qs:
-                    erros.append("tracked_destination_url: missing %s param" % chave)
+                if not valores.get(chave) or not valores[chave][0]:
+                    erros.append("tracked_destination_url: missing or empty %s param" % chave)
 
     for chave in ("utm_source", "utm_medium", "utm_campaign"):
         valor = link.get(chave)
@@ -64,8 +68,16 @@ def erros_link(link):
 
     if "is_active" in link and not isinstance(link["is_active"], bool):
         erros.append("is_active: boolean when present")
-    if "expires_at" in link and not isinstance(link["expires_at"], str):
-        erros.append("expires_at: ISO timestamp string when present")
+    if "expires_at" in link:
+        exp = link["expires_at"]
+        if not isinstance(exp, str):
+            erros.append("expires_at: ISO timestamp string when present")
+        else:
+            from datetime import datetime
+            try:
+                datetime.fromisoformat(exp.replace("Z", "+00:00"))
+            except ValueError:
+                erros.append("expires_at: ISO timestamp string when present")
 
     return erros
 
@@ -100,6 +112,18 @@ CASOS_QUEBRADOS = [
         "tracked_destination_url": "https://outro-dominio.com/?utm_source=a&utm_medium=b&utm_campaign=c",
     }),
     ("name vazio", {"name": ""}),
+    ("destino sem hostname", {
+        "destination_url": "https:///sem-host",
+        "tracked_destination_url": "https:///sem-host?utm_source=a&utm_medium=b&utm_campaign=c",
+    }),
+    ("loop /T/ maiusculo", {
+        "destination_url": "https://exemplo.com.br/T/outro-link",
+        "tracked_destination_url": "https://exemplo.com.br/T/outro-link?utm_source=a&utm_medium=b&utm_campaign=c",
+    }),
+    ("utm_campaign sem valor", {
+        "tracked_destination_url": "https://exemplo.com.br/lp/demo?utm_source=referral&utm_medium=site&utm_campaign=",
+    }),
+    ("expires_at invalido", {"expires_at": "amanha"}),
 ]
 
 
@@ -134,6 +158,10 @@ def main():
 
     with open(args.input, encoding="utf-8") as f:
         dados = json.load(f)
+    if not isinstance(dados, dict):
+        print("TRACKING INVALID (1):")
+        print("  - input must be a JSON object")
+        sys.exit(1)
     link = dados.get("link", dados)
 
     erros = erros_link(link)

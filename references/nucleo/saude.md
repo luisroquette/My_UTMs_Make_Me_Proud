@@ -14,6 +14,7 @@ The probe fetches destinations **it does not control**. Before resolving a host:
 
 1. Block private/loopback/link-local/multicast IPv4 and IPv6 ranges (RFC1918, etc.).
 2. Intercept DNS resolution and reject any hostname resolving to a blocked IP — error `private_host`.
+3. **Redirects: either follow with the guard re-run on EVERY hop, or do not follow at all.** A destination that 302-redirects to `http://169.254.169.254/` (or any RFC1918 host) bypasses the guard entirely if only the initial host is checked. The reference implementation does not follow redirects.
 
 A probe without this guard is a server-side request forgery vector pointed at your own infrastructure.
 

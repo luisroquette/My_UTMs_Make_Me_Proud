@@ -39,6 +39,8 @@ def erros_link(link):
         parsed = urlparse(dest)
         if not parsed.hostname:
             erros.append("destination_url: must have a hostname")
+        if parsed.query:
+            erros.append("destination_url: must be query-free (tracked URL is destination + utm params)")
         if parsed.username or parsed.password:
             erros.append("destination_url: credentials embedded in URL")
         # case-insensitive: /T/ is the same loop
@@ -124,6 +126,10 @@ CASOS_QUEBRADOS = [
         "tracked_destination_url": "https://exemplo.com.br/lp/demo?utm_source=referral&utm_medium=site&utm_campaign=",
     }),
     ("expires_at invalido", {"expires_at": "amanha"}),
+    ("destino com query", {
+        "destination_url": "https://exemplo.com.br/x?ref=1",
+        "tracked_destination_url": "https://exemplo.com.br/x?ref=1?utm_source=a&utm_medium=b&utm_campaign=c",
+    }),
 ]
 
 

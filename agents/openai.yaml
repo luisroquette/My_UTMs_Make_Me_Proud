@@ -1,0 +1,4 @@
+interface:
+  display_name: "My_UTMs_Make_Me_Proud"
+  short_description: "Full tracking-link cycle: create, click, attribute, health, metrics"
+  default_prompt: "Use $my-utms-make-me-proud to create a tracking link for this campaign, define its counting and attribution rules, monitor its health, and report its metrics."

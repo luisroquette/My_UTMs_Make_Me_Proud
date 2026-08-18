@@ -8,7 +8,7 @@ Every place where a visitor becomes a lead or a customer reads the attribution c
 
 | Conversion point | What it records |
 |---|---|
-| Lead form / lead event | `first_tracking_click_id`, `last_tracking_click_id` on the lead event row |
+| Lead form / lead event | `firstTrackingClickId`, `lastTrackingClickId` on the lead event (camelCase in the reference codebase; the database columns are `first_tracking_click_id` / `last_tracking_click_id`) |
 | Checkout / purchase (any product) | `first_marketing_click_id`, `last_marketing_click_id` on the purchase row |
 
 The same cookie serves both: a click can produce a lead and, later, a purchase, and both carry the same first/last pair.

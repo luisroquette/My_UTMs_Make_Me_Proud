@@ -1,0 +1,380 @@
+{
+  "links": [
+    {
+      "slug": "lp-treinamento-lovable",
+      "name": "LP Treinamento Lovable",
+      "destination_url": "https://cfgauss.com.br/lp/lovable-pro",
+      "utm_source": "cfgauss",
+      "utm_medium": "referral",
+      "utm_campaign": "lp-treinamento-lovable",
+      "is_active": true,
+      "expires_at": null,
+      "saude": "healthy"
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "name": "Lançamento NotchAgent (e-mail)",
+      "destination_url": "https://cfgauss.com.br/cursos/notchagent",
+      "utm_source": "cfgauss",
+      "utm_medium": "email",
+      "utm_campaign": "mailmkt_notchagent-lancamento",
+      "is_active": true,
+      "expires_at": null,
+      "saude": "healthy"
+    },
+    {
+      "slug": "ig-artigo-funil-ia",
+      "name": "Artigo Funil de IA (Instagram)",
+      "destination_url": "https://cfgauss.com.br/blog/funil-ia",
+      "utm_source": "cfgauss",
+      "utm_medium": "social",
+      "utm_campaign": "ig_artigo-funil-ia",
+      "is_active": true,
+      "expires_at": null,
+      "saude": "broken"
+    },
+    {
+      "slug": "maria-cadastro",
+      "name": "Cadastro marIA (WhatsApp)",
+      "destination_url": "https://cfgauss.com.br/cadastro",
+      "utm_source": "cfgauss",
+      "utm_medium": "whatsapp",
+      "utm_campaign": "maria_cadastro",
+      "is_active": false,
+      "expires_at": null,
+      "saude": "healthy"
+    }
+  ],
+  "daily_aggregates": [
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-05",
+      "clicks": 3
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "day": "2026-07-05",
+      "clicks": 8
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-06",
+      "clicks": 4
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-07",
+      "clicks": 5
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-08",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-09",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-10",
+      "clicks": 3
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-11",
+      "clicks": 4
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-13",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-14",
+      "clicks": 7
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "day": "2026-07-14",
+      "clicks": 8
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-15",
+      "clicks": 3
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-16",
+      "clicks": 4
+    },
+    {
+      "slug": "ig-artigo-funil-ia",
+      "day": "2026-07-16",
+      "clicks": 2
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-17",
+      "clicks": 0
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-18",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-19",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-20",
+      "clicks": 3
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-21",
+      "clicks": 4
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-22",
+      "clicks": 5
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-23",
+      "clicks": 6
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "day": "2026-07-23",
+      "clicks": 8
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-24",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-25",
+      "clicks": 3
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-27",
+      "clicks": 5
+    },
+    {
+      "slug": "ig-artigo-funil-ia",
+      "day": "2026-07-27",
+      "clicks": 2
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-28",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-29",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-30",
+      "clicks": 3
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-07-31",
+      "clicks": 4
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-01",
+      "clicks": 5
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "day": "2026-08-01",
+      "clicks": 8
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-02",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-03",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-04",
+      "clicks": 0
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-05",
+      "clicks": 4
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-06",
+      "clicks": 5
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-07",
+      "clicks": 6
+    },
+    {
+      "slug": "ig-artigo-funil-ia",
+      "day": "2026-08-07",
+      "clicks": 2
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-08",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-09",
+      "clicks": 3
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-10",
+      "clicks": 4
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "day": "2026-08-10",
+      "clicks": 8
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-11",
+      "clicks": 5
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-12",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-13",
+      "clicks": 7
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-14",
+      "clicks": 3
+    },
+    {
+      "slug": "maria-cadastro",
+      "day": "2026-08-14",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-15",
+      "clicks": 4
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-16",
+      "clicks": 5
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-17",
+      "clicks": 6
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "day": "2026-08-18",
+      "clicks": 7
+    },
+    {
+      "slug": "ig-artigo-funil-ia",
+      "day": "2026-08-18",
+      "clicks": 2
+    }
+  ],
+  "events": [
+    {
+      "slug": "lp-treinamento-lovable",
+      "clicked_at": "2026-08-18T10:11:00Z",
+      "utm_source": "instagram",
+      "utm_medium": "social",
+      "utm_campaign": "lp-treinamento-lovable",
+      "referrer_host": "instagram.com",
+      "device": "mobile"
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "clicked_at": "2026-08-18T10:12:00Z",
+      "utm_source": "cfgauss",
+      "utm_medium": "referral",
+      "utm_campaign": "lp-treinamento-lovable",
+      "referrer_host": "cfgauss.com.br",
+      "device": "desktop"
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "clicked_at": "2026-08-18T09:00:00Z",
+      "utm_source": "cfgauss",
+      "utm_medium": "email",
+      "utm_campaign": "mailmkt_notchagent-lancamento",
+      "referrer_host": "gmail.com",
+      "device": "desktop"
+    },
+    {
+      "slug": "ig-artigo-funil-ia",
+      "clicked_at": "2026-08-16T20:30:00Z",
+      "utm_source": "instagram",
+      "utm_medium": "social",
+      "utm_campaign": "ig_artigo-funil-ia",
+      "referrer_host": "instagram.com",
+      "device": "mobile"
+    }
+  ],
+  "conversions": [
+    {
+      "slug": "lp-treinamento-lovable",
+      "type": "lead",
+      "converted_at": "2026-08-18T10:20:00Z"
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "type": "lead",
+      "converted_at": "2026-08-18T10:25:00Z"
+    },
+    {
+      "slug": "lp-treinamento-lovable",
+      "type": "purchase",
+      "converted_at": "2026-08-18T11:02:00Z"
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "type": "lead",
+      "converted_at": "2026-08-18T09:40:00Z"
+    },
+    {
+      "slug": "mailmkt-notchagent-lancamento",
+      "type": "purchase",
+      "converted_at": "2026-08-18T09:55:00Z"
+    }
+  ]
+}

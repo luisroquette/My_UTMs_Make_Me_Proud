@@ -5,6 +5,16 @@ All notable changes to this skill are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-08-18
+
+### Added
+
+- `scripts/gerar-dashboard.py` — deterministic dashboard generator (stdlib only, no server, zero JS): answers the five metrics-contract questions, calendar-filled series with absence ≠ zero, derived link status, embedded links CSV export.
+- Self-test suite with 8 regression cases (`--self-test`), same philosophy as the validator.
+- `dashboard/dados-exemplo.json` — canonical storage-layer export shape; `dashboard/index.html` — committed reference dashboard (opens offline).
+- README section "Dashboard de referência".
+- Design spec: `docs/superpowers/specs/2026-08-18-dashboard-skill-design.md`.
+
 ## [1.1.0] - 2026-08-18
 
 ### Added

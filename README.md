@@ -23,6 +23,7 @@
 
 ## Table of contents
 
+- [Em 30 segundos](#em-30-segundos)
 - [Para quem é este produto?](#para-quem-é-este-produto)
 - [Instalação](#instalação)
 - [Início rápido](#início-rápido)
@@ -30,6 +31,9 @@
 - [Características](#características)
 - [Os contratos, em profundidade](#os-contratos-em-profundidade)
 - [As decisões que moldaram este repo](#as-decisões-que-moldaram-este-repo)
+- [O validator, regra por regra](#o-validator-regra-por-regra)
+- [Guia de integração para desenvolvedores](#guia-de-integração-para-desenvolvedores)
+- [Roadmap do ecossistema](#roadmap-do-ecossistema)
 - [Em comparação com ferramentas manuais / de agência / comerciais](#em-comparação-com-ferramentas-manuais--de-agência--comerciais)
 - [Casos de uso](#casos-de-uso)
 - [Exemplo de saída](#exemplo-de-saída)
@@ -47,6 +51,14 @@
 - [Licença](#licença)
 - [Contribuindo](#contribuindo)
 - [Autor](#autor)
+
+---
+
+## Em 30 segundos
+
+You create a link. It gets a slug, a destination, and UTMs — validated by a deterministic script with thirteen regression cases, so a broken link cannot enter the system. A visitor clicks it: the click is recorded once (replays cannot double-count), and the visitor is redirected in the same breath — because a metric must never stand between a visitor and the destination. The lead form records which link introduced the lead; the purchase records which link closed it. A health probe watches every link, with an SSRF guard and datacenter-block detection, so "the links stopped working" is an alert, not a quarterly surprise. A metrics contract calendar-fills 7/30/90-day windows so the report at the end of the quarter is numbers over verified links — not opinions over a spreadsheet.
+
+That is the entire product. The rest of this README is the terrain: the rules, the reasoning, and the exact behavior of each stage. If the thirty-second version already sounds like what you needed, jump to [Início rápido](#início-rápido) and run the self-test — it takes ten seconds and tells you whether the machine is honest.
 
 ---
 
@@ -242,6 +254,105 @@ The skill was not designed by committee — it was extracted from a production s
 6. **Born at 1.0.0.** The reference system had already survived production; the first public release shipped the full cycle with a tag.
 7. **Integrations are recommended, not mandatory.** The LP plug upgraded to v2.1.0 because it chose to; the contract works standalone.
 8. **Structure mirrors the LP skill, with one deliberate split:** a channel-agnostic `nucleo/` plus an `integracoes/` that accumulates channels one template at a time.
+
+---
+
+## O validator, regra por regra
+
+`scripts/validar-tracking-link.py` is 184 lines of Python with no dependencies and no LLM calls. Every rule below is enforced mechanically, and every rule below has at least one regression case that fails if the rule is removed. This section documents the complete rule set — it doubles as the specification for anyone reimplementing the gate in another language.
+
+### The universal fields
+
+- **`name`** — required string, 1-100 characters. The name is what humans read in the admin panel; the slug is what machines route. A link without a name is a link nobody can find.
+- **`slug`** — required string, 1-80 characters, matching `^[a-z0-9]+(-[a-z0-9]+)*$`. No uppercase, no underscores, no spaces, no leading or trailing hyphens, no consecutive hyphens. The regex is the same shape the production route uses — a slug the validator accepts is a slug the router will serve.
+- **`destination_url`** — required string, `http://` or `https://`, at most 2048 characters, **with a hostname**, **with no query string**, with no embedded credentials, and not pointing at another tracking link. Four separate failure modes, four separate error messages, four regression cases.
+- **`tracked_destination_url`** — required string, `http(s)://`, at most 4096 characters, and — when the destination is valid — **derived from it**: it must start with `destination_url + "?"` and carry non-empty `utm_source`, `utm_medium` and `utm_campaign` parameters. The derivation check is the heart of the gate: it makes "a link that silently lost its campaign parameter" structurally impossible.
+- **`utm_source` / `utm_medium` / `utm_campaign`** — required strings, 1-120 characters each. These are the fields downstream reports group by; a link with an empty source produces a channel called "" in every report.
+- **`utm_content` / `utm_term`** — optional strings, at most 120 characters when present. Present-and-wrong-shape fails; absent is fine.
+- **`is_active`** — optional boolean. Present-and-not-boolean fails. The lifecycle default is explicit in the consumer contract, not smuggled through the validator.
+- **`expires_at`** — optional, but when present it must be a **parseable ISO timestamp** (`datetime.fromisoformat`, with `Z` normalized). A date the clock cannot parse is a date that will never expire — or worse, that expires immediately depending on who reads it.
+
+### The regression ledger
+
+Each case below was a real bug class — found in review, fixed, and pinned forever in `--self-test`:
+
+| # | Case | Bug class it pins |
+|---|---|---|
+| 1 | slug with underscore and uppercase | normalization drift |
+| 2 | empty slug | missing identity |
+| 3 | destination with embedded credentials | secret leakage through URLs |
+| 4 | destination pointing at `/t/` | infinite redirect loop |
+| 5 | uppercase `/T/` loop | case-sensitivity escape of the loop guard |
+| 6 | missing `utm_medium` | incomplete attribution |
+| 7 | empty `utm_source` | the "" channel |
+| 8 | tracked not derived from destination | silent UTM loss |
+| 9 | empty name | unsearchable links |
+| 10 | destination without hostname | `https:///x` class — URL that is not a URL |
+| 11 | destination with query string | the double-`?` URL class |
+| 12 | `utm_campaign` present but empty | parameter without a value |
+| 13 | invalid `expires_at` | unparseable lifecycle |
+
+The self-test runs the valid example through the gate and asserts it passes, and runs all thirteen broken cases and asserts each fails. The suite can only grow: every future bug class adds a case in the same commit as its fix — the contribution bar documented in [Contribuindo](#contribuindo).
+
+---
+
+## Guia de integração para desenvolvedores
+
+This section is the practical path from "cloned the repo" to "my channel produces tracked links". It assumes you are integrating into a real stack — the sibling repos show complete reference implementations.
+
+### Step 1 — Decide the channel's identity
+
+Every channel owns three things in its integration file: the **hostname → `utm_source` map** (which hosts belong to this channel), the **default `utm_medium`** (email, referral, ads, social), and the **link shapes** (which slug patterns the channel emits). Write these down first — the rest of the integration is mechanical once they exist.
+
+### Step 2 — Create the integration directory
+
+```bash
+cp references/integracoes/modelo-nova-integracao.md references/integracoes/meu-canal.md
+```
+
+The template has the three sections above plus the rules every integration must obey: reference the nucleus, never redefine it; derive UTMs from the map, never hand-type; emit links through creation-stage rules only.
+
+### Step 3 — Wire creation into your product
+
+Wherever your product creates a marketing URL, call creation with the contract's fields. Feed the draft through the validator in CI:
+
+```bash
+python3 scripts/validar-tracking-link.py --input meu-link.json
+```
+
+A failing CI build is the normal state of a new integration — the validator is strict on purpose, and the error messages say exactly which rule was broken.
+
+### Step 4 — Implement click and attribution against the contracts
+
+The click contract tells you the exact behavior: 302 with `no-store`/`no-referrer`, transactional recording with `RETURNING (xmax = 0)`, HEAD and prefetch excluded. The attribution contract tells you the two moments to record (`firstTrackingClickId` on lead capture, `last_marketing_click_id` on purchase) and the casing of each column. Implement to the letter; the letter is what makes the reports join.
+
+### Step 5 — Health and metrics
+
+Point the health probe at your links with the SSRF guard from `saude.md`. Calendar-fill your metric windows per `metricas.md`. The two contracts together answer "are the links working" and "what did they do" — without them, attribution is numbers over an unverified substrate.
+
+### Troubleshooting
+
+- **The visitor gets a 404 on `/t/<slug>`** — the slug was renamed (public URL changed) or the link was archived. The contract does not auto-migrate renames; check the link's lifecycle state.
+- **The visitor gets a 503 "Tracking unavailable"** — the resolution mechanism is down. This is the designed failure mode: visible and honest, instead of a silent wrong redirect.
+- **The validator prints `TRACKING INVALID` in CI** — read the error list literally. Each line names the field and the rule. Fix the draft, not the validator.
+- **The aggregate does not match the granular events** — someone incremented the aggregate outside the transaction, or on replay. The contract requires "both layers or neither"; find the code path that writes one without the other.
+- **The health probe flags a healthy link as broken** — check whether the probe followed a redirect into a blocked range (the guard reports `private_host` by design) or whether the datacenter-block detection is active (links can be fine from real users and blocked from datacenter IPs at the same time).
+
+---
+
+## Roadmap do ecossistema
+
+The repository is not a snapshot — it is a layer in a system that keeps growing. The roadmap is public because the priorities are decisions, not surprises:
+
+**Now — consolidation.** The three sibling skills (this one, the LP engine, the email engine) are published and interoperating through the contract. The immediate work is hardening: every new bug class becomes a regression case, every integration gets its template filled.
+
+**Next — the unified dashboard.** The metrics contract already defines the 7/30/90 calendar-filled windows a dashboard consumes; the sibling LP skill defines the pluggable dashboard contract. The two meet when the dashboard shows clicks by channel, lead attribution and link health in one screen — implemented once, consumed by every integration.
+
+**Then — new channels.** Email marketing, workshops, paid ads, WhatsApp — each arrives as a directory under `integracoes/` and a hostname map. Nothing in the nucleus moves. The template exists precisely so a new channel is an afternoon of contract-writing, not a redesign.
+
+**Later — the knowledge graph.** When the number of links, channels and rules grows, the contracts themselves become the corpus for a knowledge graph — so "which rule touches which channel" is a query, not a memory.
+
+The order matters: consolidation before dashboard before channels, because every later layer consumes the guarantees of the earlier one.
 
 ---
 
@@ -452,6 +563,16 @@ The three skills form one marketing system: capture → nurture → attribution,
 **Can I add a new channel myself?** Yes — copy `modelo-nova-integracao.md`, define the hostname → source map, write the link shapes. The nucleus does not change.
 
 **How do I know a link is healthy?** The health contract: double probe (HEAD + confirmation), SSRF guard with per-hop redirect validation, states `unchecked → healthy | warning | broken`, and alert codes — including the datacenter-block class that silently kills links.
+
+**Why "absence ≠ zero" everywhere?** Because the two states demand different actions. A day with zero clicks means "the campaign underperformed" — investigate the creative. A day with no data means "the tracking stopped working" — investigate the pipeline. Conflating them makes a broken tracker look like a failing campaign, and the wrong team gets the alarm.
+
+**Why is the validator Python and the contracts Markdown?** The contracts must be readable by any agent in any stack; Markdown is the only format with no adoption cost. The validator must run anywhere with zero dependencies; Python 3.10+ is installed on every developer machine and CI runner. Together: prose for humans, code for the gate, no lock-in.
+
+**What does "the tracking link owns the contract" mean in practice?** It means this repository is the only place where the meaning of "a click" is defined. When the LP engine or the email engine needs tracking, they reference these files instead of inventing their own version. One definition, three consumers, zero drift — and when the definition changes, it changes once, visibly, in one commit.
+
+**Can the validator run in my CI?** Yes — it is a single-file Python script with no dependencies. Exit 0 = valid, exit 1 = invalid with the error list on stdout. Wire it as a job on every PR that touches link drafts, and broken links stop being a production discovery.
+
+**What is the success bar for this repo?** The name says it: your UTMs make you proud. Concretely — when the quarterly report runs, you can state which channel produced each sale, with first-click and last-click attribution, backed by a validator that runs the same verdict every time. If you cannot state it, the repo has failed its purpose; if you can, it has earned its name.
 
 ---
 
